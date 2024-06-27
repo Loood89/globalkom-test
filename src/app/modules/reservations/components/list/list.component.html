@@ -1,0 +1,104 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Vreme polaska</th>
+            <th scope="col">Polazak</th>
+            <th scope="col">Destinacija</th>
+            <th>Cena</th>
+            <th scope="col">Obrisi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (reservation of reservations$ | async; track reservation.id) {
+        <tr>
+            <th>{{ reservation.id }}</th>
+            <td>{{ reservation.dateTimeDeparture }}</td>
+            <td>{{ reservation.startAddress }}</td>
+            <td>{{ reservation.endAddress }}</td>
+            <td>{{ getReservationPrice(reservation.startAddress,reservation.endAddress) | currency:'EUR'}}</td>
+            <td><i class="fa fa-trash clickable" aria-hidden="true" (click)="onRemove(reservation.id)"></i>
+                <i class="fa fa-info-circle clickable" aria-hidden="true"
+                    (click)="onDetails(modalDetails, reservation)"></i>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+<ng-template #modalDetails let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Detalji rezervacije</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td>
+                            Polazna adresa:
+                        </td>
+                        <td>{{ selectedReservation?.startAddress }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Odredišna adresa:
+                        </td>
+                        <td>{{ selectedReservation?.endAddress }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Datum i vreme polaska:
+                        </td>
+                        <td>{{ selectedReservation?.dateTimeDeparture }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Broj telefona putnika:
+                        </td>
+                        <td>{{ selectedReservation?.phoneNumber }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Nacin placanja:
+                        </td>
+                        <td>{{ selectedReservation?.paymentType }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Cena voznje:
+                        </td>
+                        <td>{{ getReservationPrice(selectedReservation!.startAddress, selectedReservation!.endAddress) |
+                            currency:'EUR'
+                            }}</td>
+                    </tr>
+                    <tr *ngIf="selectedReservation?.paymentType === 'Kartica' ">
+                        <td>
+                            Broj platne kartice:
+                        </td>
+                        <td>{{ selectedReservation?.cardData?.cardNumber }}</td>
+                    </tr>
+                    <tr *ngIf="selectedReservation?.paymentType === 'Kartica' ">
+                        <td>
+                            Mesec isteka kartice:
+                        </td>
+                        <td>{{ selectedReservation?.cardData?.cardExMonth }}</td>
+                    </tr>
+                    <tr *ngIf="selectedReservation?.paymentType === 'Kartica' ">
+                        <td>
+                            Godina isteka kartice:
+                        </td>
+                        <td>{{ selectedReservation?.cardData?.cardExYear }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.close()">Zatvori</button>
+    </div>
+</ng-template>

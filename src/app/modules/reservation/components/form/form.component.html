@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-center">
+
+    <form class="col-md-4" [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+        <h2>Forma za</h2>
+        <div class="form-group">
+            <label for="startAddress">Polazna adresa</label>
+            <input type="text" class="form-control" placeholder="Polazna adresa" name="startAddress"
+                formControlName="startAddress">
+        </div>
+        <div class="form-group">
+            <label for="endAddress">Odredišna adresa</label>
+            <input type="text" class="form-control" placeholder="Odredišna adresa" name="endAddress"
+                formControlName="endAddress">
+        </div>
+        <div class="form-group">
+            <label for="dateTimeDeparture">Datum i vreme polaska</label>
+            <!-- <input type="text" class="form-control" placeholder="Datum i vreme polaska" name="dateTimeDeparture"
+                formControlName="dateTimeDeparture"> -->
+            <div></div>
+            <ngb-datepicker #dp [(ngModel)]="date" [ngModelOptions]="{standalone: true}" [minDate]="minDate"
+                [maxDate]="maxDate" (dateSelect)="onDateTimeChange()" />
+            <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onDateTimeChange()" />
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Broj telefona putnika</label>
+            <input type="text" class="form-control" placeholder="Broj telefona putnika" name="phoneNumber"
+                formControlName="phoneNumber">
+        </div>
+        <div class="form-group">
+            <label for="paymentType">Nacin placanja</label>
+            <select class="form-select" aria-label="Default select example" placeholder="Nacin placanja"
+                name="paymentType" formControlName="paymentType" (change)="onPaymentChange()">
+                <option value="Kes" selected>Kes</option>
+                <option value="Kartica">Kartica</option>
+            </select>
+        </div>
+        <div *ngIf="paymentType === 'Kartica' " formGroupName="cardData">
+            <div class="form-group">
+                <label for="cardNumber">Broj platne kartice</label>
+                <input type="text" class="form-control" placeholder="Broj platne kartice" name="cardNumber"
+                    formControlName="cardNumber">
+            </div>
+            <div class="form-group d-flex flex-column">
+                <label>Datum vazenja kartice</label>
+                <div class="col-md-12 d-flex">
+                    <div class="col-md-2 ">
+                        <select class="form-select " aria-label="Default select example" placeholder="Mesec"
+                            name="cardExMonth" formControlName="cardExMonth">
+                            <option value="" selected>Mesec</option>
+                            <option *ngFor="let item of getMonths; let i = index">{{ item }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 gx-5">
+                        <select class="form-select" aria-label="Default select example" placeholder="Godina"
+                            name="cardExYear" formControlName="cardExYear">
+                            <option value="" selected>Godina</option>
+                            <option *ngFor="let item of getYear; let i = index">{{ item }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div> -->
+        <div class="form-group"><button type="submit" class="btn btn-primary"
+                [disabled]="!reservationForm.valid">Rezervisi</button></div>
+
+    </form>
+</div>
+
+<!-- Polazna adresa
+Odredišna adresa
+Datum i vreme polaska
+Broj telefona putnika
+Način plaćanja:
+Keš
+Kartica (broj kartice i datum isteka kartice) -->
